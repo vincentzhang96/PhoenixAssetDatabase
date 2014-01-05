@@ -7,6 +7,8 @@ import static java.util.Objects.requireNonNull;
 
 /**
  *
+ * @version 0.0.0.3
+ * @since 2013-11-23
  * @author Vince
  */
 public class IndexEntry {
@@ -99,6 +101,10 @@ public class IndexEntry {
         return result;
     }
 
+    /**
+     * <code>SIZEOF = 32</code><br/>
+     * The size of an index entry, in bytes. 
+     */
     public static final int SIZEOF = 4 + 4 + 8 + 8 + 8;
 
 }

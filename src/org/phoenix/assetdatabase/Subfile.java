@@ -12,6 +12,8 @@ import static java.util.Objects.requireNonNull;
 
 /**
  *
+ * @version 0.0.0.3
+ * @since 2013-11-23
  * @author Vince
  */
 public class Subfile {

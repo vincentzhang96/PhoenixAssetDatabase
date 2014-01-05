@@ -17,12 +17,14 @@ import java.util.Map.Entry;
 import static java.util.Objects.requireNonNull;
 
 /**
- *
+ * Implementation of the Phoenix Asset Database, supporting reading and writing version 3 PADs.
+ * 
+ * @version 0.0.0.3
+ * @since 2013-11-23
  * @author Vince
  */
 public class AssetDatabaseImpl implements AssetDatabase {
 
-    public static final int MAGIC_NUMBER = 0x50414442;  //  'PADB'
     public static final int HEADER_SIZE = 42;
     public static final int VERSION_3 = 3;
 
@@ -217,7 +219,7 @@ public class AssetDatabaseImpl implements AssetDatabase {
     }
 
     @Override
-    public Subfile loadSubfile(TypeGroupInstance tgi) throws IOException {
+    public Subfile loadSubfile(TypeGroupInstance tgi) throws FileNotFoundException, IOException {
         IndexEntry ie = index.getEntry(tgi);
         if (ie == null) {
             throw new FileNotFoundException("TGI " + tgi.toString() + " not in database.");
@@ -228,7 +230,7 @@ public class AssetDatabaseImpl implements AssetDatabase {
     }
 
     @Override
-    public Map<TypeGroupInstance, Subfile> loadSubfiles(Collection<TypeGroupInstance> tgis) throws IOException {
+    public Map<TypeGroupInstance, Subfile> loadSubfiles(Collection<TypeGroupInstance> tgis) throws FileNotFoundException, IOException {
         if (tgis.isEmpty()) {
             return Collections.emptyMap();
         }
@@ -302,9 +304,8 @@ public class AssetDatabaseImpl implements AssetDatabase {
 
     @Override
     public void clear() {
-        index.clear();
-        holeIndex.clear();
-        metadata.clear();
+        modIndex.clear();
+        modifiedSubfiles.clear();
     }
 
     public static int getLatestVersion() {
