@@ -28,7 +28,7 @@ public class AssetDatabaseImpl implements AssetDatabase {
     public static final int HEADER_SIZE = 42;
     public static final int VERSION_3 = 3;
 
-    private final Path location;
+    public final Path location;
     /**
      * Index that exists on disk (does not change except during load() or
      * save()).
@@ -105,7 +105,7 @@ public class AssetDatabaseImpl implements AssetDatabase {
         }
     }
 
-    private void syncModIndex() {
+    public void syncModIndex() {
         if (modIndex != null) {
             modIndex.clear();
         }
@@ -113,7 +113,7 @@ public class AssetDatabaseImpl implements AssetDatabase {
         modifiedSubfiles.clear();
     }
 
-    private void syncIndex() {
+    public void syncIndex() {
         index.clear();
         index.getEntries().addAll(modIndex.getEntries());
         modifiedSubfiles.clear();
@@ -207,6 +207,9 @@ public class AssetDatabaseImpl implements AssetDatabase {
 
     private void doWriteFileV3(Map.Entry<TypeGroupInstance, Subfile> e, RandomAccessFile raf) throws IOException {
         IndexEntry ie = modIndex.getEntry(e.getKey());
+        if(ie == null) {
+            return;
+        }
         SaveInformation si = e.getValue().save(raf);
         ie.setFileOffset(si.diskOffset);
         ie.setFileSize(si.diskSize);
@@ -297,6 +300,22 @@ public class AssetDatabaseImpl implements AssetDatabase {
         return index;
     }
 
+    /**
+     * Gets the in-memory index (not exposed via AssetDatabase interface).
+     * @return 
+     */
+    public Index getModIndex() {
+        return modIndex;
+    }
+
+    /**
+     * Gets the in-memory changed file data (not exposed via AssetDatabase interface).
+     * @return 
+     */
+    public Map<TypeGroupInstance, Subfile> getModifiedSubfiles() {
+        return modifiedSubfiles;
+    }
+    
     @Override
     public MetadataList getMetadata() {
         return metadata;
