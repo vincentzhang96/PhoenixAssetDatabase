@@ -132,5 +132,14 @@ public interface AssetDatabase {
      * through other methods until the database is saved.
      */
     public void clear();
+    
+    /**
+     * Closes the database and frees any releasable resources.
+     * <p>
+     * Note that depending on implementation this may not do anything.
+     */
+    public default void close() {
+        
+    }
 
 }
