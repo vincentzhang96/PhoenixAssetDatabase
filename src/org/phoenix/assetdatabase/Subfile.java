@@ -118,7 +118,7 @@ public class Subfile {
         if (!dataInMemory.isPresent()) {
             decompressAndSet();
             //  MD5 check
-            if (!isEmptyArray(md5Hash)) {
+            if (!isEmptyArray(md5Hash) && !isMarkedArray(md5Hash)) {
                 byte[] digest = calculateMD5(dataInMemory.get());
                 if (!Arrays.equals(md5Hash, digest)) {
                     throw new DataCorruptedException("MD5 hashes do not match. File possibly corrupt?");
@@ -215,6 +215,11 @@ public class Subfile {
         metadata.save(out);
         return new SaveInformation(ptr, compressedSize);
     }
+
+    public byte[] getMd5Hash() {
+        return md5Hash;
+    }
+    
     
     /**
      * Calculates the MD5 hash of a byte array.
@@ -238,6 +243,28 @@ public class Subfile {
             }
         }
         return true;
+    }
+    
+    /**
+     * Checks if a given array is marked (all 0xFF).
+     * @param data
+     * @return 
+     */
+    public static boolean isMarkedArray(byte[] data) {
+        for (byte b : data) {
+            if (b != (byte)0xFF) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    public static String byteArrayToString(byte[] data) {
+        StringBuilder sb = new StringBuilder();
+        for(byte b : data) {
+            sb.append(String.format("%02X", b));
+        }
+        return sb.toString();
     }
 }
 
