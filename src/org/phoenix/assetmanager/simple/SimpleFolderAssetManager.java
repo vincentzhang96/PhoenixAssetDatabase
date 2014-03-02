@@ -52,6 +52,7 @@ public class SimpleFolderAssetManager implements PAssetManager {
         this.rootFolder = rootFolder;
         databaseSupplier = supplier;
         acceptableFileExts = new HashSet<>();
+        entries = new HashMap<>();
     }
 
     public Set<String> getAcceptableFileExts() {
